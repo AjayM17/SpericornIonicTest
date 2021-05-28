@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+    <ion-item>
+      <ion-input placeholder="Enter Email" type="email" formControlName="email"></ion-input>
+    </ion-item>
+    <div *ngIf="submitted && getFormControls.email.errors">
+      <div *ngIf="getFormControls.email.errors.required">
+        Please Enter Email
+      </div>
+      <div *ngIf="getFormControls.email.errors.pattern">
+        Please Enter Valid Email
+      </div>
+    </div>
+   
+    <ion-item>
+      <ion-input placeholder="Enter Password" formControlName="password"></ion-input>
+    </ion-item>
+    <div *ngIf="submitted && getFormControls.password.errors">
+      <div *ngIf="getFormControls.password.errors.required">
+        Please Enter Password
+      </div>
+    </div>
+    <ion-button expand="block" type="submit">Login</ion-button>
+  </form>
+  <ion-button expand="block"[routerLink]="['/register']">Sign Up</ion-button>
+</ion-content>

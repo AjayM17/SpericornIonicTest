@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+  <ion-item>
+    <ion-input placeholder="Enter Email" type="email" formControlName="email"></ion-input>
+  </ion-item>
+  <div *ngIf="submitted && getFormControls.email.errors">
+    <div *ngIf="getFormControls.email.errors.required">
+      Please Enter Email
+    </div>
+    <div *ngIf="getFormControls.email.errors.pattern">
+      Please Enter Valid Email
+    </div>
+  </div>
+  <ion-item>
+    <ion-input placeholder="Enter UserName" type="text" formControlName="name"></ion-input>
+    
+  </ion-item>
+  <div *ngIf="submitted && getFormControls.name.errors">
+    <div *ngIf="getFormControls.name.errors.required">
+      Please Enter Name
+    </div>
+  </div>
+  <ion-item>
+    <ion-input placeholder="Enter Phone Number" formControlName="phone"></ion-input>
+    
+  </ion-item>
+  <div *ngIf="submitted && getFormControls.phone.errors">
+    <div *ngIf="getFormControls.phone.errors.required">
+      Please Enter Phone Number
+    </div>
+  </div>
+  <ion-item>
+    <ion-input placeholder="Enter Password" formControlName="password"></ion-input>
+    
+  </ion-item>
+  <div *ngIf="submitted && getFormControls.password.errors">
+    <div *ngIf="getFormControls.password.errors.required">
+      Please Enter Password
+    </div>
+    <div *ngIf="getFormControls.password.errors.pattern">
+       Password, must have at least 8 characters and a special symbol.
+    </div>
+  </div>
+  <ion-item>
+    <ion-input placeholder="Confirm Password" formControlName="confirmPassword"></ion-input>
+   
+  </ion-item>
+  <ion-button expand="block" type="submit">Register</ion-button>
+</form>
+</ion-content>
