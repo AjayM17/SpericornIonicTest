@@ -1,0 +1,6 @@
+{
+	"appId": "com.example.app",
+	"appName": "SpericornIonicTest",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

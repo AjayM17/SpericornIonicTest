@@ -11,8 +11,8 @@ export class StorageService {
     storage.create()
    }
 
-  setItem = (key,value) =>{
-    this.storage.set(key,value)
+  setItem =  async (key,value) =>{
+   return await this.storage.set(key,value)
   }
 
   getToken = async() =>{

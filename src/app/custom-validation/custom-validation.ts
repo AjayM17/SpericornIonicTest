@@ -1,19 +1,16 @@
 
-import { AbstractControl, } from '@angular/forms';
-
-// export  const pass =(control: AbstractControl)=>{
-//     console.log(control.root.value.password);
-//     if(control.root.value.password === control.root.value.confirmPassword){
-//         return { match : true};
-//     }
-//     return null;
-// };
-
-export  const passwordMatch =(control: AbstractControl)=>{
-    console.log(control.root.value.password);
-    console.log(control.root.value.confirmPassword);
-    if(control.root.value.password === control.root.value.confirmPassword){
-        return { match : true};
+import { FormGroup } from '@angular/forms';
+export function ConfirmedValidator(controlName: string, matchingControlName: string){
+    return (formGroup: FormGroup) => {
+        const control = formGroup.controls[controlName];
+        const matchingControl = formGroup.controls[matchingControlName];
+        if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
+            return;
+        }
+        if (control.value !== matchingControl.value) {
+            matchingControl.setErrors({ confirmedValidator: true });
+        } else {
+            matchingControl.setErrors(null);
+        }
     }
-    return null;
-};
+}

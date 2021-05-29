@@ -17,6 +17,6 @@ export class HttpService {
 
   checkEmail= (param) => {
     console.log(param)
-   return this.http.post(`${this.baseUrl}checkMail`,param).toPromise()
+   return this.http.post(`${this.baseUrl}auth/checkMail`,param).toPromise()
   }
 }

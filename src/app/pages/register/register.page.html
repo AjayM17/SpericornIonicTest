@@ -51,6 +51,15 @@
     <ion-input placeholder="Confirm Password" formControlName="confirmPassword"></ion-input>
    
   </ion-item>
+  <div *ngIf="submitted && getFormControls.confirmPassword.errors">
+    <div *ngIf="getFormControls.confirmPassword.errors.required">
+      Please Confirm Password
+    </div>
+    <div *ngIf="getFormControls.confirmPassword.errors.confirmedValidator">
+       Password not match
+    </div>
+  </div>
   <ion-button expand="block" type="submit">Register</ion-button>
 </form>
+<ion-button expand="block"[routerLink]="['/login']">Login</ion-button>
 </ion-content>

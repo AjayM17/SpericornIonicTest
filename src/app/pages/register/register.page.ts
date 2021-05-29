@@ -1,9 +1,10 @@
 /* eslint-disable max-len */
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { passwordMatch } from '../../custom-validation/custom-validation';
+import { ConfirmedValidator } from '../../custom-validation/custom-validation';
 import { HttpService } from '../../services/http.service';
 import { StorageService } from '../../services/storage.service';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-register',
@@ -17,14 +18,16 @@ export class RegisterPage implements OnInit {
   emailRegx = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
   passwordRegx = new RegExp(/(?=.*?[#?!@$%^&*-]).{8,}$/);
 
-  constructor(private formBuilder: FormBuilder, private httpService: HttpService, private storageService: StorageService) { }
+  constructor(private formBuilder: FormBuilder, private httpService: HttpService, private storageService: StorageService,private router: Router) { }
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      email: ['ajay@gmail.com', [Validators.required, Validators.pattern(this.emailRegx)]],
-      name: ['ajay', Validators.required],
-      phone: ['1111111111', Validators.required],
-      password: ['111@1111', [Validators.required, Validators.pattern(this.passwordRegx)]],
-      confirmPassword: ['111@1111', [Validators.required, passwordMatch]]
+      email: ['', [Validators.required, Validators.pattern(this.emailRegx)]],
+      name: ['', Validators.required],
+      phone: ['', Validators.required],
+      password: ['', [Validators.required, Validators.pattern(this.passwordRegx)]],
+      confirmPassword: ['', Validators.required]
+    },{ 
+      validator: ConfirmedValidator('password', 'confirmPassword')
     });
   }
 
@@ -33,8 +36,9 @@ export class RegisterPage implements OnInit {
   registerUser = async () => {
     this.submitted = true;
     if (this.registerForm.valid) {
-      const res = await this.checkEmailAlreadyExistOrNot()
-      if(res['success']){
+      const check_res = await this.checkEmailAlreadyExistOrNot()
+      console.log(check_res)
+      if(check_res['success']){
         const param = {
           email: this.registerForm.get('email').value,
           password: this.registerForm.get('password').value,
@@ -42,13 +46,19 @@ export class RegisterPage implements OnInit {
           phone: this.registerForm.get('phone').value,
         };
         console.log(param)
-        this.httpService.register(param).subscribe(res => {
+        this.httpService.register(param).subscribe(async res => {
+          console.log(res)
           if(res['success']){
-            this.storageService.setItem('token',res['data']['token'])
+          await  this.storageService.setItem('token',res['data']['token'])
+            this.router.navigate(['/profile'])
+          }else {
+            alert(res['message'])
           }
         }, err => {
           console.log(err)
         })
+      } else {
+        alert(check_res['message'])
       }
     }
   };

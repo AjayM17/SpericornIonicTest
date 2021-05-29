@@ -15,13 +15,22 @@ export class LoginPage implements OnInit {
   submitted = false;
   emailRegx = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
   passwordRegx = new RegExp(/(?=.*?[#?!@$%^&*-]).{8,}$/);
+  invalidUser = false
+  errorMsg = null
 
   constructor(private formBuilder: FormBuilder, private httpService: HttpService, private storageService: StorageService, private router: Router) { }
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      email: ['ajay@gmail.com', [Validators.required, Validators.pattern(this.emailRegx)]],
-      password: ['111@1111', Validators.required],
+      email: ['', [Validators.required, Validators.pattern(this.emailRegx)]],
+      password: ['', Validators.required],
     });
+  }
+
+  ionViewWillEnter(){
+    this.invalidUser = false
+    this.submitted = false
+   this.loginForm.get('email').setValue('') 
+   this.loginForm.get('password').setValue('') 
   }
 
   get getFormControls() { return this.loginForm.controls; }
@@ -29,22 +38,23 @@ export class LoginPage implements OnInit {
   loginUser = async () => {
     this.submitted = true;
     if (this.loginForm.valid) {
-        const param = {
-          email: this.loginForm.get('email').value,
-          password: this.loginForm.get('password').value,
-        };
-        console.log(param)
-        this.httpService.login(param).subscribe(res => {
-          console.log(res)
-          if(res['success']){
-            this.storageService.setItem('login',true)
-            // console.log(res['data']['token'])
-            this.storageService.setItem('token',res['data']['token'])
-            this.router.navigate(['/profile'])
-          }
-        }, err => {
-          console.log(err)
-        })
+      const param = {
+        email: this.loginForm.get('email').value,
+        password: this.loginForm.get('password').value,
+      };
+      console.log(param)
+      this.httpService.login(param).subscribe(async res => {
+        console.log(res)
+        if (res['success']) {
+          await this.storageService.setItem('token', res['data']['token'])
+          this.router.navigate(['/profile'])
+        } else {
+          this.invalidUser = true
+          this.errorMsg = res['message']
+        }
+      }, err => {
+        console.log(err)
+      })
     }
   };
 

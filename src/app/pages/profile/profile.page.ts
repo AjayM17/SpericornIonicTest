@@ -16,13 +16,11 @@ export class ProfilePage implements OnInit {
     this.httpService.getProfile().subscribe( data => {
       if(data['success']){
         this.profile = data['data']['userData']
-        console.log(this.profile)
       }
     })
   }
 
  async logOut(){
-
    await this.storageService.clearAll()
    this.authService.token = null
    this.navctrl.navigateRoot('login')

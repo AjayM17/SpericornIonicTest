@@ -26,6 +26,8 @@
         Please Enter Password
       </div>
     </div>
+    <div *ngIf="invalidUser" style="    text-align: center;
+    padding: 10px;"> {{errorMsg}}  </div>
     <ion-button expand="block" type="submit">Login</ion-button>
   </form>
   <ion-button expand="block"[routerLink]="['/register']">Sign Up</ion-button>
